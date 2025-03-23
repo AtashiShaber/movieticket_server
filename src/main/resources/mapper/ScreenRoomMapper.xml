@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaber.movieticket.mapper.ScreenRoomMapper">
+    <!--    查询-->
+    <select id="listScreenRoom" resultType="com.shaber.movieticket.dto.ScreenroomDto">
+        select
+        sr.srid,
+        c.cid,
+        c.cname,
+        sr.srname
+        from `screenroom` sr
+        inner join `cinema` c on c.cid = sr.cid
+        <where>
+            <if test="cname != '' and cname != null">
+                and cname like concat('%',#{cname},'%')
+            </if>
+            <if test="srname != '' and srname != null">
+                and srname like concat('%',#{srname},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--    添加-->
+
+
+    <!--    修改-->
+
+
+    <!--    删除-->
+    <delete id="batchDelete">
+        delete from `screenroom`
+        where srid in
+        <foreach item="id" collection="srids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--    Map的使用-->
+
+</mapper>

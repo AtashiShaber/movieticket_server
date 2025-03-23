@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaber.movieticket.mapper.CinemaMapper">
+    <!--    查询-->
+    <select id="getCinema" resultType="com.shaber.movieticket.pojo.Cinema">
+        select * from cinema where cname = #{cname} and ccall = #{ccall}
+    </select>
+    <select id="getCinemaByCid" resultType="com.shaber.movieticket.pojo.Cinema">
+        select * from cinema where cid = #{cid}
+    </select>
+    <select id="listCinema" resultType="com.shaber.movieticket.pojo.Cinema">
+        select * from `cinema`
+        <where>
+            <if test="cname != '' and cname != null">
+                and cname like concat('%',#{cname},'%')
+            </if>
+            <if test="caddress != '' and caddress != null">
+                and caddress like concat('%',#{caddress},'%')
+            </if>
+            <if test="ccall != '' and ccall != null">
+                and ccall like concat('%',#{ccall},'%')
+            </if>
+        </where>
+    </select>
+    <!--    添加-->
+    <insert id="addCinema">
+        insert into `cinema` values(#{cid},#{cname},#{caddress},#{ccall})
+    </insert>
+
+    <!--    修改-->
+    <update id="updateCinema">
+        update `cinema` set cname = #{cname},
+        caddress = #{caddress},
+        ccall = #{ccall} where cid = #{cid}
+    </update>
+
+    <!--    删除-->
+    <delete id="deleteCinema">
+        delete from `cinema` where cid = #{cid}
+    </delete>
+
+    <!--    Map的使用-->
+
+
+</mapper>

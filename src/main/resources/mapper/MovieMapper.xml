@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaber.movieticket.mapper.MovieMapper">
+    <!--    查询-->
+    <select id="listMovieRelese" resultType="com.shaber.movieticket.pojo.Movie">
+        select * from movie
+        <where>
+            <if test="mname != null">
+                and mname like concat('%',#{mname},'%')
+            </if>
+            <if test="mactor">
+                and mactor like concat('%',#{mactor},'%')
+            </if>
+            and mstatus = 1
+        </where>
+    </select>
+    <select id="listMovie" resultType="com.shaber.movieticket.pojo.Movie">
+        select * from `movie`
+        <where>
+            <if test="mname != null || mname != ''">
+                and mname like concat('%',#{mname},'%')
+            </if>
+            <if test="mactor != null || mactor != ''">
+                and mactor like concat('%',#{mactor},'%')
+            </if>
+            <if test="mstatus != -1">
+                and mstatus = #{mstatus}
+            </if>
+            <if test="mstarttime != null and mendtime != null">
+                AND mstarttime <![CDATA[ <= ]]> #{mendtime}
+                AND mendtime <![CDATA[ >= ]]> #{mstarttime}
+            </if>
+        </where>
+    </select>
+    <select id="findUpcoming" resultType="com.shaber.movieticket.pojo.Movie">
+        select *
+        from `movie` m
+        where m.mstarttime > #{now} and DATE_ADD(#{now},INTERVAL 7 DAY) >= m.mstarttime
+    </select>
+    <select id="findCast" resultType="com.shaber.movieticket.dto.MoviePreviewDto">
+        select m.mname,
+        c.cname,
+        sr.srname,
+        s.stime
+        from `movie` m
+        inner join `screening` s on s.mid = m.mid
+        inner join `screenroom` sr on sr.srid = s.srid
+        inner join `cinema` c on c.cid = sr.cid
+        where m.mstatus = 1 and #{now} = s.sday
+    </select>
+    <!--    添加-->
+
+
+    <!--    修改-->
+    <update id="upCast">
+        UPDATE movie
+        SET mstatus = #{i},
+        mstarttime = NOW(),
+        mendtime = CASE
+        WHEN NOW() > mendtime THEN DATE_ADD(NOW(), INTERVAL 7 DAY)
+        ELSE mendtime
+        END
+        WHERE mid = #{mid}
+    </update>
+
+    <!--    删除-->
+
+
+    <!--    Map的使用-->
+</mapper>

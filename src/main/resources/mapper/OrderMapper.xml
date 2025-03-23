@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaber.movieticket.mapper.OrderMapper">
+    <!--    查询-->
+    <select id="listOrder" resultType="Order">
+        select
+        o.oid,
+        m.mname as uid,
+        o.tid,
+        o.time,
+        o.price,
+        o.ostatus
+        from `order` o
+        inner join `user` u on o.uid = u.uid
+        inner join `ticket` t on t.tid = o.tid
+        inner join `screening` s on s.sid = t.sid
+        inner join `movie` m on s.mid = m.mid
+        <where>
+            u.uname = #{uname}
+            <if test="mname != null">
+                and m.mname like concat('%', #{mname}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="findOrdersByTids" resultType="com.shaber.movieticket.pojo.Order">
+        SELECT oid, uid, tid, otime, oprice, ostatus
+        FROM `order`
+        WHERE tid IN
+        <foreach item="tid" collection="tids" open="(" separator="," close=")">
+            #{tid}
+        </foreach>
+    </select>
+    <!--    添加-->
+
+
+    <!--    修改-->
+
+
+    <!--    删除-->
+    <delete id="batchDelete">
+        delete from `order`
+        where oid in
+        <foreach item="id" collection="oids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <!--    Map的使用-->
+
+
+</mapper>

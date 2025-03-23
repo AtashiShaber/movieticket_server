@@ -1,0 +1,11 @@
+// 1. 初始化（需确保datacenterId和machineId在集群中唯一）
+SnowflakeIdWorker idWorker = new SnowflakeIdWorker(1, 1);
+
+// 2. 生成ID
+long id = idWorker.nextId();
+
+// 3. 反解析ID信息（可选）
+long timestamp = (id >> TIMESTAMP_LEFT) + START_TIMESTAMP;
+long datacenterId = (id >> DATACENTER_LEFT) & MAX_DATACENTER_NUM;
+long machineId = (id >> MACHINE_LEFT) & MAX_MACHINE_NUM;
+long sequence = id & MAX_SEQUENCE;

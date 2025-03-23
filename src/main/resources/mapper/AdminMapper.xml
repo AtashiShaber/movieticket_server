@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaber.movieticket.mapper.AdminMapper">
+    <!--    查询-->
+    <select id="listAdmin" resultType="com.shaber.movieticket.dto.AdminDto">
+        select admin_id,admin_name,phone from `admin`
+        <where>
+            <if test="adminName != null and adminName != ''">
+                and admin_name like concat('%',#{adminName},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone like concat('%',#{phone},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--    添加-->
+
+
+    <!--    修改-->
+
+
+    <!--    删除-->
+
+
+    <!--    Map的使用-->
+
+</mapper>

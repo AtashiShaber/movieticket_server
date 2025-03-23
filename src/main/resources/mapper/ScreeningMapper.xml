@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaber.movieticket.mapper.ScreeningMapper">
+    <!--    查询-->
+    <select id="listScreeningByDate" resultType="com.shaber.movieticket.pojo.Screening">
+        select * from screening
+        where sday = #{sday} and stime = #{stime}
+    </select>
+    <select id="getScreening" resultType="com.shaber.movieticket.pojo.Screening">
+        select * from screening where sid = #{sid}
+    </select>
+    <select id="listScreeningTarget" resultType="com.shaber.movieticket.pojo.Screening">
+        select *
+        from screening s
+        inner join movie m on s.mid = m.mid
+        inner join screenroom sr on s.srid = sr.srid
+        where m.mid = #{mid} and sr.cid = #{cid}
+    </select>
+    <select id="selectBySrids" resultType="com.shaber.movieticket.pojo.Screening">
+        select *
+        from `screening`
+        where srid in
+            <foreach item="id" collection="srids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </select>
+    <select id="listSreening" resultType="com.shaber.movieticket.dto.ScreeningDto">
+        select
+        s.sid,
+        m.mid,
+        m.mname,
+        sr.srid,
+        sr.srname,
+        c.cid,
+        c.cname,
+        s.sday,
+        s.stime,
+        s.sprice
+        from `screening` s
+        inner join `movie` m on s.mid = m.mid
+        inner join `screenroom` sr on s.srid = sr.srid
+        inner join `cinema` c on c.cid = sr.cid
+        <where>
+            <if test="sday != null">
+                and sday = #{sday}
+            </if>
+            <if test="stime != null and stime != ''">
+                and stime = #{stime}
+            </if>
+            <if test="mname != null and mname != ''">
+                and mname like concat('%',#{mname},'%')
+            </if>
+            <if test="srname != null and srname != ''">
+                and srname like concat('%',#{srname},'%')
+            </if>
+            <if test="cname != null and cname != ''">
+                and cname like concat('%',#{cname},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--    添加-->
+    <insert id="insertScreening">
+        insert into screening (sid,mid,srid,sday,stime,sprice)
+        values (#{sid},#{mid},#{srid},#{sday},#{stime},#{sprice})
+    </insert>
+
+
+    <!--    修改-->
+    <update id="updateScreening">
+        update screening
+        set mid = #{mid},srid = #{srid},sday = #{sday},stime = #{stime},sprice = #{sprice}
+        where sid = #{sid}
+    </update>
+
+
+    <!--    删除-->
+    <delete id="deleteScreening">
+        delete from screening where sid = #{sid}
+    </delete>
+
+
+    <!--    Map的使用-->
+
+</mapper>

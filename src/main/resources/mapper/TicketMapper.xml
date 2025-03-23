@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaber.movieticket.mapper.TicketMapper">
+    <!--    查询-->
+    <select id="listTicketInfo" resultType="com.shaber.movieticket.pojo.TicketInfo">
+        select t.tid,c.cname,sr.srname,m.mname,t.tseat,t.tstatus
+        from ticket t
+        inner join screening s on s.sid = t.sid
+        inner join movie m on m.mid = s.mid
+        inner join screenroom sr on sr.srid = s.srid
+        inner join cinema c on c.cid = sr.cid
+        <where>
+            <if test="cname != null">
+                and c.cname like concat('%',#{cname},'%')
+            </if>
+            <if test="srname != null">
+                and sr.srname like concat('%',#{srname},'%')
+            </if>
+            <if test="mname != null">
+                and m.mname like concat('%',#{mname},'%')
+            </if>
+            <if test="tstatus != -1">
+                and t.tstatus = #{tstatus}
+            </if>
+        </where>
+    </select>
+    <select id="getTicket" resultType="com.shaber.movieticket.pojo.Ticket">
+        select * from where tid = #{tid}
+    </select>
+    <select id="findTicketsBySids" resultType="com.shaber.movieticket.pojo.Ticket">
+        SELECT tid, sid, tseat, tstatus
+        FROM ticket
+        WHERE sid IN
+        <foreach item="sid" collection="sids" open="(" separator="," close=")">
+            #{sid}
+        </foreach>
+    </select>
+    <select id="selectTickets" resultType="com.shaber.movieticket.dto.TicketDto">
+        SELECT
+        t.tid,m.mname,c.cname,sr.srname,s.sday,t.tseat,t.tstatus
+        FROM `ticket` t
+        INNER JOIN `screening` s ON t.sid = s.sid
+        INNER JOIN `screenroom` sr ON s.srid = sr.srid
+        INNER JOIN `cinema` c ON c.cid = sr.cid
+        INNER JOIN `order` o ON o.tid = t.tid
+        <where>
+            o.uid = #{uid}
+            <if test="mname != '' and mname != null">
+                and m.mname like CONCAT('%',#{mname},'%')
+            </if>
+            <if test="cname != '' and cname != null">
+                and c.cname like CONCAT('%',#{cname},'%')
+            </if>
+            <if test="srname != '' and srname != null">
+                and sr.srname like CONCAT('%',#{srname},'%')
+            </if>
+            <if test="sday != null">
+                s.sday = #{sday}
+            </if>
+        </where>
+    </select>
+
+    <!--    添加-->
+
+
+    <!--    修改-->
+
+
+    <!--    删除-->
+    <delete id="batchDelete">
+        delte from `ticket`
+        where tid in
+        <foreach item="id" collection="tids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="batchDeleteBySids">
+        delte from `ticket`
+        where sid in
+        <foreach item="id" collection="sids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <!--    Map的使用-->
+
+</mapper>
