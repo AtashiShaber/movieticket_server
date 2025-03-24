@@ -1,8 +1,5 @@
 package com.shaber.movieticket.service;
 
-import com.shaber.movieticket.pojo.Order;
-import com.shaber.movieticket.pojo.PageResult;
-import com.shaber.movieticket.pojo.ResultValue;
 import com.shaber.movieticket.resp.RV;
 import com.shaber.movieticket.vo.OrderAddVO;
 
@@ -19,4 +16,6 @@ public interface OrderService {
     RV refund(String authHeader, String oid);
 
     RV buildOrder(String authHeader, OrderAddVO orderAddVO);
+
+    RV pay(String authHeader, OrderAddVO orderAddVO);
 }

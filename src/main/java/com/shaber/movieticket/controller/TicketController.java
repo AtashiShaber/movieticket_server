@@ -2,8 +2,6 @@ package com.shaber.movieticket.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.shaber.movieticket.dto.TicketDto;
-import com.shaber.movieticket.mapper.TicketMapper;
-import com.shaber.movieticket.pojo.Ticket;
 import com.shaber.movieticket.resp.RV;
 import com.shaber.movieticket.service.TicketService;
 import com.shaber.movieticket.vo.TicketAddVO;
@@ -21,12 +19,6 @@ public class TicketController {
     @Autowired
     private final TicketService ticketService;
 
-    // 创建票
-    @PostMapping("/build")
-    public RV buildTicket(@RequestBody TicketAddVO ticketAddVO) {
-        return ticketService.buildTicket(ticketAddVO);
-    }
-
     // 使用票
     @PostMapping("/useTicket")
     public RV useTicket(@RequestBody Map<String, String> ticketMap) {
@@ -38,5 +30,12 @@ public class TicketController {
     public RV<PageInfo<TicketDto>> listTicket(@RequestHeader("Authorization") String authHeader,
                                               @RequestBody TicketPageQueryVO ticketPageQueryVO) {
         return ticketService.listTicket(authHeader, ticketPageQueryVO);
+    }
+
+    // 创建票
+    @PostMapping("/build")
+    public RV buildTicket(@RequestHeader("Authorization") String authHeader,
+                          @RequestBody TicketAddVO ticketAddVO){
+        return ticketService.buildTicket(authHeader, ticketAddVO);
     }
 }

@@ -48,4 +48,7 @@ public interface UserMapper {
     int addBalance(@Param("uid") String uid,
                    @Param("amount") BigDecimal amount);
 
+    @Update("UPDATE user SET umoney = umoney - #{oprice} " +
+            "WHERE uid = #{uid}")
+    int pay(@Param("uid") String uid, @Param("oprice") BigDecimal oprice);
 }

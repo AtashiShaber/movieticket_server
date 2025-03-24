@@ -69,4 +69,7 @@ public interface OrderMapper {
                    @Param("tid") String tid,
                    @Param("oprice") BigDecimal oprice,
                    @Param("ostatus") int ostatus);
+
+    @Select("select * from `order` where tid = #{tid} and uid = #{uid}")
+    Order findOrderByTidUid(@Param("tid") String tid, @Param("uid") String uid);
 }

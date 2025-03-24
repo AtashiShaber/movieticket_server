@@ -8,7 +8,7 @@ import com.shaber.movieticket.vo.pagequery.TicketPageQueryVO;
 
 public interface TicketService {
     // 创建订单
-    RV buildTicket(TicketAddVO ticketAddVO);
+    RV buildTicket(String authHeader, TicketAddVO ticketAddVO);
 
     RV useTicket(String tid);
 

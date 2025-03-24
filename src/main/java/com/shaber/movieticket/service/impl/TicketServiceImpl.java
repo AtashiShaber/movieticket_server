@@ -14,6 +14,7 @@ import com.shaber.movieticket.vo.TicketAddVO;
 import com.shaber.movieticket.vo.pagequery.TicketPageQueryVO;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,23 @@ public class TicketServiceImpl implements TicketService {
 
     @Transactional
     @Override
-    public RV buildTicket(TicketAddVO ticketAddVO) {
+    public RV buildTicket(String authHeader, TicketAddVO ticketAddVO) {
+        // 通过redis获取登录的uid
+        String redisKey = authHeader.replace("user:","user:token:");
+        String token = redisTemplate.opsForValue().get(redisKey);
+        // 如果token不存在
+        if (token == null) {
+            return RV.noData(401,"用户登录信息不存在！", null);
+        }
+        Claims claims = jwtUtil.parseToken(token);
+        String uid = claims.get("id", String.class).replaceAll("ID_", "");
+        User user = userMapper.findUserByUid(uid);
+
+        // 判断用户是否为空
+        if (user == null) {
+            return RV.noData(401,"用户信息不存在！", null);
+        }
+
         // 首先查询该电影的该场次是否有重复
         if (ticketMapper.findTicketBySidTseat(ticketAddVO.getSid(),ticketAddVO.getTseat()) != null) {
             throw new TicketServiceException("该票信息已经存在了");

@@ -1,6 +1,7 @@
 package com.shaber.movieticket.service.impl;
 
 import com.shaber.movieticket.exception.OrderServiceException;
+import com.shaber.movieticket.exception.UserServiceException;
 import com.shaber.movieticket.mapper.OrderMapper;
 import com.shaber.movieticket.mapper.TicketMapper;
 import com.shaber.movieticket.mapper.UserMapper;
@@ -141,6 +142,42 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderServiceException("创建失败！");
         }
 
-        return null;
+        return RV.success("创建完成！");
+    }
+
+    @Transactional
+    @Override
+    public RV pay(String authHeader, OrderAddVO orderAddVO) {
+        // 通过redis获取登录的uid
+        String redisKey = authHeader.replace("user:","user:token:");
+        String token = redisTemplate.opsForValue().get(redisKey);
+        // 如果token不存在
+        if (token == null) {
+            return RV.noData(401,"用户登录信息不存在！", null);
+        }
+        Claims claims = jwtUtil.parseToken(token);
+        String uid = claims.get("id", String.class).replaceAll("ID_", "");
+        User user = userMapper.findUserByUid(uid);
+
+        // 判断用户是否为空
+        if (user == null) {
+            return RV.noData(401,"用户信息不存在！", null);
+        }
+
+        // 通过uid来进行扣款与改变订单状态
+        if (userMapper.pay(uid, orderAddVO.getOprice()) <= 0) {
+            throw new UserServiceException("扣款失败！");
+        }
+        // 成功扣款则进行修改订单状态
+        Order order = orderMapper.findOrderByTidUid(orderAddVO.getTid(), uid);
+        // 如果订单创建失败但是继续运行到这一步，需要检测
+        if (order == null) {
+            throw new OrderServiceException("订单创建异常！");
+        }
+        if (orderMapper.updateOrder(order.getOid(), 1) <= 0) {
+            throw new OrderServiceException("订单确认支付失败！");
+        }
+
+        return RV.success("订单确认支付成功！");
     }
 }

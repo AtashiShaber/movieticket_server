@@ -40,7 +40,15 @@ public class OrderController {
     }
 
     @PostMapping("build")
-    public RV buildOrder(@RequestHeader("Authorization") String authHeader, @RequestBody OrderAddVO orderAddVO) {
+    public RV buildOrder(@RequestHeader("Authorization") String authHeader,
+                         @RequestBody OrderAddVO orderAddVO) {
         return orderService.buildOrder(authHeader, orderAddVO);
+    }
+
+    // 若是成功生成票之后还需要确认付款
+    @PostMapping("pay")
+    public RV pay(@RequestHeader("Authorization") String authHeader,
+                  @RequestBody OrderAddVO orderAddVO) {
+        return orderService.pay(authHeader, orderAddVO);
     }
 }
