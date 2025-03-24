@@ -1,5 +1,8 @@
 package com.shaber.movieticket.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.shaber.movieticket.dto.OrderDto;
 import com.shaber.movieticket.exception.OrderServiceException;
 import com.shaber.movieticket.exception.UserServiceException;
 import com.shaber.movieticket.mapper.OrderMapper;
@@ -13,6 +16,7 @@ import com.shaber.movieticket.service.OrderService;
 import com.shaber.movieticket.utils.JwtUtil;
 import com.shaber.movieticket.utils.SnowflakeIdWorker;
 import com.shaber.movieticket.vo.OrderAddVO;
+import com.shaber.movieticket.vo.pagequery.PageQueryVO;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -179,5 +183,31 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return RV.success("订单确认支付成功！");
+    }
+
+    @Override
+    public RV<PageInfo<OrderDto>> listOrder(String authHeader, PageQueryVO pageQueryVO) {
+        // 通过redis获取登录的uid
+        String redisKey = authHeader.replace("user:","user:token:");
+        String token = redisTemplate.opsForValue().get(redisKey);
+        // 如果token不存在
+        if (token == null) {
+            return RV.noData(401,"用户登录信息不存在！", null);
+        }
+        Claims claims = jwtUtil.parseToken(token);
+        String uid = claims.get("id", String.class).replaceAll("ID_", "");
+        User user = userMapper.findUserByUid(uid);
+
+        // 判断用户是否为空
+        if (user == null) {
+            return RV.noData(401,"用户信息不存在！", null);
+        }
+
+        // 若是成功登录则进行查询
+        PageHelper.startPage(pageQueryVO.getPageNum(), pageQueryVO.getPageSize());
+        List<OrderDto> orderDtos = orderMapper.listOrder(uid);
+        PageInfo<OrderDto> data = new PageInfo<>(orderDtos);
+
+        return RV.success("查询完毕",data);
     }
 }

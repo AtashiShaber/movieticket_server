@@ -1,17 +1,17 @@
 package com.shaber.movieticket.mapper;
 
+import com.shaber.movieticket.dto.OrderDto;
 import com.shaber.movieticket.pojo.Order;
 import org.apache.ibatis.annotations.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
     //查询该用户的所有订单（支持模糊查询）
-    List<Order> listOrder(Map<String, Object> map);
+    List<OrderDto> listOrder(@Param("uid") String uid);
 
     //获取所有订单
     @Select("select * from `order`")
