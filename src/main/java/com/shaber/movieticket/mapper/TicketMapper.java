@@ -66,7 +66,7 @@ public interface TicketMapper {
     @Select("select * from `ticket` where tid = #{tid}")
     Ticket findTicket(@Param("tid") String tid);
 
-    PageInfo<TicketDto> selectTickets(@Param("uid") String uid,
+    List<TicketDto> selectTickets(@Param("uid") String uid,
                                       @Param("mname") String mname,
                                       @Param("cname") String cname,
                                       @Param("srname") String srname,

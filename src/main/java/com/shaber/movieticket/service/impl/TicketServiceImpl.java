@@ -19,6 +19,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 
 
 @Service
@@ -109,12 +110,14 @@ public class TicketServiceImpl implements TicketService {
         // 进行分页操作
         PageHelper.startPage(ticketPageQueryVO.getPageNum(), ticketPageQueryVO.getPageSize());
         // 进行查询
-        PageInfo<TicketDto> data = ticketMapper.selectTickets(uid,
+        List<TicketDto> ticketDtos = ticketMapper.selectTickets(uid,
                                             ticketPageQueryVO.getMname(),
                                             ticketPageQueryVO.getCname(),
                                             ticketPageQueryVO.getSrname(),
                                             ticketPageQueryVO.getSday());
 
-        return RV.success("查询完毕", null);
+        PageInfo<TicketDto> data = PageInfo.of(ticketDtos);
+
+        return RV.success("查询完毕", data);
     }
 }
