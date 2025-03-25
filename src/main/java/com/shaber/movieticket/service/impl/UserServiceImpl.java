@@ -248,6 +248,10 @@ public class UserServiceImpl implements UserService {
         if (userMapper.addBalance(uid,money) <= 0){
             throw new UserServiceException("充值异常！");
         }
+
+        System.out.println(uid);
+        System.out.println(money);
+        System.out.println(money.getClass());
         return RV.success("充值成功！");
     }
 }

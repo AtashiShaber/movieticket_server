@@ -5,9 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class TicketAddVO {
-    private String sid;
-    private String tseat;
-    private int tstatus;
+public class OrderPayVO {
+    private String oid;
     private BigDecimal oprice;
 }

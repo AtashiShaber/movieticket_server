@@ -45,6 +45,7 @@
         INNER JOIN `screenroom` sr ON s.srid = sr.srid
         INNER JOIN `cinema` c ON c.cid = sr.cid
         INNER JOIN `order` o ON o.tid = t.tid
+        INNER JOIN `movie` m ON m.mid = s.mid
         <where>
             o.uid = #{uid}
             <if test="mname != '' and mname != null">
@@ -57,8 +58,20 @@
                 and sr.srname like CONCAT('%',#{srname},'%')
             </if>
             <if test="sday != null">
-                s.sday = #{sday}
+                and s.sday = #{sday}
             </if>
+            and t.tstatus >= 0
+        </where>
+    </select>
+    <select id="findTicketOver" resultType="com.shaber.movieticket.pojo.Ticket">
+        select t.tid,s.stime as sid,t.tseat,t.tstatus
+        from `ticket` t
+        INNER JOIN `order` o ON o.tid = t.tid
+        INNER JOIN `screening` s ON s.sid = t.sid
+        <where>
+            o.uid = #{uid}
+            and #{nowDate} >= s.sday
+            and t.tstatus = 0
         </where>
     </select>
 

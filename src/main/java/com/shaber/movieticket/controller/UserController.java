@@ -5,6 +5,7 @@ import com.shaber.movieticket.dto.UserDto;
 import com.shaber.movieticket.resp.AuthResponse;
 import com.shaber.movieticket.resp.RV;
 import com.shaber.movieticket.service.impl.UserServiceImpl;
+import com.shaber.movieticket.vo.MoneyVO;
 import com.shaber.movieticket.vo.updateVO;
 import com.shaber.movieticket.vo.UserAddVO;
 import com.shaber.movieticket.vo.UserLoginVO;
@@ -69,7 +70,7 @@ public class UserController {
     }
 
     @PostMapping("/recharge")
-    public RV recharge(@RequestHeader("Authorization") String authHeader, Map<String, BigDecimal> moneyMap){
-        return userService.recharge(authHeader, moneyMap.get("money"));
+    public RV recharge(@RequestHeader("Authorization") String authHeader, @RequestBody MoneyVO moneyVO){
+        return userService.recharge(authHeader, moneyVO.getMoney());
     }
 }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.shaber.movieticket.dto.OrderDto;
 import com.shaber.movieticket.exception.OrderServiceException;
+import com.shaber.movieticket.exception.TicketServiceException;
 import com.shaber.movieticket.exception.UserServiceException;
 import com.shaber.movieticket.mapper.OrderMapper;
 import com.shaber.movieticket.mapper.TicketMapper;
@@ -16,6 +17,7 @@ import com.shaber.movieticket.service.OrderService;
 import com.shaber.movieticket.utils.JwtUtil;
 import com.shaber.movieticket.utils.SnowflakeIdWorker;
 import com.shaber.movieticket.vo.OrderAddVO;
+import com.shaber.movieticket.vo.OrderPayVO;
 import com.shaber.movieticket.vo.pagequery.PageQueryVO;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,7 +153,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public RV pay(String authHeader, OrderAddVO orderAddVO) {
+    public RV pay(String authHeader, OrderPayVO orderAddVO) {
         // 通过redis获取登录的uid
         String redisKey = authHeader.replace("user:","user:token:");
         String token = redisTemplate.opsForValue().get(redisKey);
@@ -168,18 +170,26 @@ public class OrderServiceImpl implements OrderService {
             return RV.noData(401,"用户信息不存在！", null);
         }
 
+        // 判断用户余额是否足够
+        if (userMapper.findUserByUid(uid).getUmoney().compareTo(orderAddVO.getOprice()) < 0) {
+            throw new UserServiceException("用户余额不足！");
+        }
+
         // 通过uid来进行扣款与改变订单状态
         if (userMapper.pay(uid, orderAddVO.getOprice()) <= 0) {
             throw new UserServiceException("扣款失败！");
         }
         // 成功扣款则进行修改订单状态
-        Order order = orderMapper.findOrderByTidUid(orderAddVO.getTid(), uid);
+        Order order = orderMapper.getOrderByOid(orderAddVO.getOid());
         // 如果订单创建失败但是继续运行到这一步，需要检测
         if (order == null) {
             throw new OrderServiceException("订单创建异常！");
         }
         if (orderMapper.updateOrder(order.getOid(), 1) <= 0) {
             throw new OrderServiceException("订单确认支付失败！");
+        }
+        if (ticketMapper.updateStatus(order.getTid(), 0) <= 0) {
+            throw new TicketServiceException("票的状态修改失败！");
         }
 
         return RV.success("订单确认支付成功！");

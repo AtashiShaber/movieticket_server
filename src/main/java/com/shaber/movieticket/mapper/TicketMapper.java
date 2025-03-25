@@ -7,6 +7,7 @@ import com.shaber.movieticket.pojo.TicketInfo;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -71,4 +72,6 @@ public interface TicketMapper {
                                       @Param("cname") String cname,
                                       @Param("srname") String srname,
                                       @Param("sday") LocalDate sday);
+
+    List<Ticket> findTicketOver(@Param("uid") String uid, @Param("nowDate") LocalDate nowDate);
 }

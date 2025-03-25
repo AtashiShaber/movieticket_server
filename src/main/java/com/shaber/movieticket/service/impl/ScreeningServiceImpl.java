@@ -13,6 +13,7 @@ import com.shaber.movieticket.pojo.*;
 import com.shaber.movieticket.resp.RV;
 import com.shaber.movieticket.service.ScreeningService;
 import com.shaber.movieticket.utils.SnowflakeIdWorker;
+import com.shaber.movieticket.vo.ScreeningMovieVO;
 import com.shaber.movieticket.vo.ScreeningVO;
 import com.shaber.movieticket.vo.pagequery.ScreeningPageQueryVO;
 import org.springframework.beans.BeanUtils;
@@ -43,6 +44,7 @@ public class ScreeningServiceImpl implements ScreeningService {
     @Autowired
     SnowflakeIdWorker snowflakeIdWorker;
 
+    @Transactional
     @Override
     public RV addScreening(ScreeningVO screeningVO) {
         //首先查询放映是否出现冲突
@@ -128,6 +130,7 @@ public class ScreeningServiceImpl implements ScreeningService {
         return RV.success("删除操作已完成");
     }
 
+    @Transactional
     @Override
     public RV updateScreening(Screening screening) {
 //        首先查询是否存在该放映信息
@@ -177,5 +180,13 @@ public class ScreeningServiceImpl implements ScreeningService {
     @Override
     public RV<Integer> countToday() {
         return RV.success("统计完成！",screeningMapper.countToday());
+    }
+
+    @Override
+    public RV<List<ScreeningDto>> getScreeningsByMid(ScreeningMovieVO vo) {
+        List<ScreeningDto> data = screeningMapper.listScreeningByMid(vo.getMid(),
+                vo.getCid(), vo.getSday());
+
+        return RV.success("查询完毕！", data);
     }
 }

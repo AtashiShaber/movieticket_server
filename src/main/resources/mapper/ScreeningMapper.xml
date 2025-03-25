@@ -60,6 +60,24 @@
             </if>
         </where>
     </select>
+    <select id="listScreeningByMid" resultType="com.shaber.movieticket.dto.ScreeningDto">
+        select
+        s.sid,
+        m.mid,
+        m.mname,
+        sr.srid,
+        sr.srname,
+        c.cid,
+        c.cname,
+        s.sday,
+        s.stime,
+        s.sprice
+        from `screening` s
+        inner join `movie` m on s.mid = m.mid
+        inner join `screenroom` sr on s.srid = sr.srid
+        inner join `cinema` c on c.cid = sr.cid
+        where m.mid = #{mid} and c.cid = #{cid} and s.sday = #{sday}
+    </select>
 
     <!--    添加-->
     <insert id="insertScreening">

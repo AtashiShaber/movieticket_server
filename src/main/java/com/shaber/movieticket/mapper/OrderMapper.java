@@ -5,6 +5,7 @@ import com.shaber.movieticket.pojo.Order;
 import org.apache.ibatis.annotations.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public interface OrderMapper {
     @Select("select count(1) from `order` where DATE(otime) = CURDATE() and ostatus > 0")
     int countOrderTodayAllPaid();
 
-    @Insert("insert into `order` values (#{oid},#{uid},#{now},#{tid},#{oprice},#{ostatus})")
+    @Insert("insert into `order` values (#{oid},#{uid},#{tid},#{now},#{oprice},#{ostatus})")
     int buildOrder(@Param("oid") String oid,
                    @Param("uid") String uid,
                    @Param("now") LocalDateTime now,

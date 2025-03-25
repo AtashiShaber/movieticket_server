@@ -5,6 +5,7 @@ import com.shaber.movieticket.dto.OrderDto;
 import com.shaber.movieticket.resp.RV;
 import com.shaber.movieticket.service.OrderService;
 import com.shaber.movieticket.vo.OrderAddVO;
+import com.shaber.movieticket.vo.OrderPayVO;
 import com.shaber.movieticket.vo.pagequery.PageQueryVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +49,11 @@ public class OrderController {
         return orderService.buildOrder(authHeader, orderAddVO);
     }
 
-    // 若是成功生成票之后还需要确认付款
+    // 若是成功生成订单之后还需要确认付款
     @PostMapping("pay")
     public RV pay(@RequestHeader("Authorization") String authHeader,
-                  @RequestBody OrderAddVO orderAddVO) {
-        return orderService.pay(authHeader, orderAddVO);
+                  @RequestBody OrderPayVO orderPayVO) {
+        return orderService.pay(authHeader, orderPayVO);
     }
 
     // 查询用户订单信息，包含分页查询

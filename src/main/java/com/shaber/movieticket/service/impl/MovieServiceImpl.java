@@ -172,10 +172,6 @@ public class MovieServiceImpl implements MovieService {
         return RV.success("下映成功");
     }
 
-    // 在Service层获取当前时间字符串
-    final String currentTimeStr = LocalTime.now()
-            .format(DateTimeFormatter.ofPattern("HH:mm"));
-
     private boolean isFutureScreening(Screening screening, LocalDate today,
                                       LocalTime now, DateTimeFormatter formatter) {
         // 日期判断优先

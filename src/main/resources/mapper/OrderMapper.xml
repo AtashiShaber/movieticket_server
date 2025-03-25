@@ -9,8 +9,8 @@
         o.oid,
         o.tid,
         m.mname,
-        o.time,
-        o.price,
+        o.otime,
+        o.oprice,
         o.ostatus
         from `order` o
         inner join `ticket` t on t.tid = o.tid

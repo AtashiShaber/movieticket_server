@@ -62,4 +62,8 @@ public interface ScreeningMapper {
 
     @Select("select count(1) from `screening` where sday = CURDATE()")
     Integer countToday();
+
+    List<ScreeningDto> listScreeningByMid(@Param("mid") String mid,
+                                          @Param("cid") String cid,
+                                          @Param("sday") LocalDate sday);
 }

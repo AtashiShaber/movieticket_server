@@ -5,6 +5,7 @@ import com.shaber.movieticket.dto.ScreeningDto;
 import com.shaber.movieticket.pojo.Screening;
 import com.shaber.movieticket.resp.RV;
 import com.shaber.movieticket.service.ScreeningService;
+import com.shaber.movieticket.vo.ScreeningMovieVO;
 import com.shaber.movieticket.vo.ScreeningVO;
 import com.shaber.movieticket.vo.pagequery.ScreeningPageQueryVO;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,11 @@ public class ScreeningController {
     @PostMapping("listByCid")
     public RV<List<Screening>> listScreeningsByCid(@RequestBody ScreeningVO screeningVO) {
         return screeningService.getScreeningsByCid(screeningVO.getSrid(),screeningVO.getSday());
+    }
+
+    @PostMapping("listByMid")
+    public RV<List<ScreeningDto>> listScreeningsByMid(@RequestBody ScreeningMovieVO screeningMovieVO) {
+        return screeningService.getScreeningsByMid(screeningMovieVO);
     }
 
     @PostMapping("add")

@@ -2,10 +2,9 @@ package com.shaber.movieticket.service;
 
 import com.github.pagehelper.PageInfo;
 import com.shaber.movieticket.dto.ScreeningDto;
-import com.shaber.movieticket.pojo.PageResult;
-import com.shaber.movieticket.pojo.ResultValue;
 import com.shaber.movieticket.pojo.Screening;
 import com.shaber.movieticket.resp.RV;
+import com.shaber.movieticket.vo.ScreeningMovieVO;
 import com.shaber.movieticket.vo.ScreeningVO;
 import com.shaber.movieticket.vo.pagequery.ScreeningPageQueryVO;
 
@@ -26,4 +25,6 @@ public interface ScreeningService {
     RV<List<Screening>> getScreeningsByCid(String srid, LocalDate sday);
 
     RV<Integer> countToday();
+
+    RV<List<ScreeningDto>> getScreeningsByMid(ScreeningMovieVO map);
 }
