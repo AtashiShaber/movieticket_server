@@ -82,6 +82,16 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public RV registerUser(String username, String password, String phone) {
+        // 判断用户名是否重复
+        if (userMapper.findUserByUname(username) != null) {
+            throw new UserServiceException("用户名重复！");
+        }
+
+        // 判断手机号是否重复
+        if (userMapper.findUserByPhone(phone) != null) {
+            throw new UserServiceException("手机号重复！");
+        }
+
         if (userMapper.register(String.valueOf(snowflakeIdWorker.nextId()),username, SecureUtil.sha256(password),phone) <= 0){
             throw new UserServiceException("注册失败！");
         }

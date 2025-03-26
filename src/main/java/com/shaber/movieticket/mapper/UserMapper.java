@@ -51,4 +51,7 @@ public interface UserMapper {
     @Update("UPDATE user SET umoney = umoney - #{oprice} " +
             "WHERE uid = #{uid}")
     int pay(@Param("uid") String uid, @Param("oprice") BigDecimal oprice);
+
+    @Select("SELECT * from `user` where uname = #{uname}")
+    User findUserByUname(@Param("uname") String username);
 }

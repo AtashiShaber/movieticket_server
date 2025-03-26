@@ -25,6 +25,7 @@ public class RV<T> {
     }
 
     public static RV<?> success(String message) {
+
         return new RV<Object>(2000, true, message, Collections.EMPTY_MAP);
     }
 
