@@ -28,6 +28,12 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     // 不需要认证的路径
     private static final List<String> EXCLUDE_PATHS = Arrays.asList(
+            // Swagger 相关路径
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/webjars/**",
             "/user/login",
             "/user/register",
             "/admin/login",
