@@ -26,6 +26,7 @@ spring:
         max-active: 8
         max-idle: 8
         max-wait: 100
+    password: my_strong_password
 
 mybatis:
   type-aliases-package: com.shaber.movieticket.pojo
