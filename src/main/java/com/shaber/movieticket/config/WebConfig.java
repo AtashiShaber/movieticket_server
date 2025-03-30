@@ -36,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 // 允许前端域名和端口（开发环境）
-                .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*")
+                .allowedOriginPatterns("http://49.235.28.76", "http://localhost:*", "http://127.0.0.1:*")
                 // 允许所有 HTTP 方法
                 .allowedMethods("*")
                 // 允许携带的请求头（必须包含 Authorization）
