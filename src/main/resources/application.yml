@@ -3,7 +3,8 @@ spring:
 #    url: jdbc:mysql://localhost:3306/cinema?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     url: jdbc:mysql://49.235.28.76:3306/cinema?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
-    password: 123456
+#    password: 123456
+    password: E43E3AC2EA7C36DC549EC6BAC3877BF2F6F4C40ED8CC8AE31B4177794564E48D
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     #初始化大小
