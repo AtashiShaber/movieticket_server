@@ -39,7 +39,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Transactional
     @Override
-    public RV addMovie(String mname, String mp, String mactor, LocalDate mstarttime, LocalDate mendtime) {
+    public RV<String> addMovie(String mname, String mp, String mactor, LocalDate mstarttime, LocalDate mendtime) {
         // 判断开始时间与结束时间是否正确
         if (mendtime.isBefore(mstarttime)) {
             throw new MovieServiceException("结束时间早于开始时间！");
@@ -47,17 +47,18 @@ public class MovieServiceImpl implements MovieService {
 
         // 添加电影
         Map<String, Object> map = new HashMap<String, Object>();
+        long id = snowflakeIdWorker.nextId();
         map.put("mname", mname);
         map.put("mp", mp);
         map.put("mactor", mactor);
         map.put("mstarttime", mstarttime);
         map.put("mendtime", mendtime);
-        map.put("mid",snowflakeIdWorker.nextId());
+        map.put("mid", id);
         if (movieMapper.insertMovie(map) <= 0){
             throw new MovieServiceException("电影添加异常！");
         }
 
-        return RV.success("添加成功！");
+        return RV.success("添加成功！", String.valueOf(id));
     }
 
     @Transactional

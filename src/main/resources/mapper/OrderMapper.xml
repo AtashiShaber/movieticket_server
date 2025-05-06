@@ -11,7 +11,8 @@
         m.mname,
         o.otime,
         o.oprice,
-        o.ostatus
+        o.ostatus,
+        t.tstatus
         from `order` o
         inner join `ticket` t on t.tid = o.tid
         inner join `screening` s on s.sid = t.sid

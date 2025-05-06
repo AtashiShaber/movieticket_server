@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface MovieService {
     //增
-    RV addMovie(String mname, String mp, String mactor, LocalDate mstarttime, LocalDate mendtime);
+    RV<String> addMovie(String mname, String mp, String mactor, LocalDate mstarttime, LocalDate mendtime);
     //删 根据mid删除
     RV deleteMovie(String mid);
     //改

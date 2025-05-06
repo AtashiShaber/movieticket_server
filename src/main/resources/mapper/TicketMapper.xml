@@ -64,13 +64,12 @@
         </where>
     </select>
     <select id="findTicketOver" resultType="com.shaber.movieticket.pojo.Ticket">
-        select t.tid,s.stime as sid,t.tseat,t.tstatus
+        select t.tid,t.sid
         from `ticket` t
         INNER JOIN `order` o ON o.tid = t.tid
         INNER JOIN `screening` s ON s.sid = t.sid
         <where>
             o.uid = #{uid}
-            and #{nowDate} >= s.sday
             and t.tstatus = 0
         </where>
     </select>

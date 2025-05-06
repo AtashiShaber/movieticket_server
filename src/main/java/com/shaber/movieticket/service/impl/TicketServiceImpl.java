@@ -7,6 +7,7 @@ import com.shaber.movieticket.exception.OrderServiceException;
 import com.shaber.movieticket.exception.TicketServiceException;
 import com.shaber.movieticket.exception.UserServiceException;
 import com.shaber.movieticket.mapper.OrderMapper;
+import com.shaber.movieticket.mapper.ScreeningMapper;
 import com.shaber.movieticket.mapper.TicketMapper;
 import com.shaber.movieticket.mapper.UserMapper;
 import com.shaber.movieticket.pojo.*;
@@ -51,6 +52,8 @@ public class TicketServiceImpl implements TicketService {
 
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private ScreeningMapper screeningMapper;
 
     @Transactional
     @Override
@@ -187,14 +190,19 @@ public class TicketServiceImpl implements TicketService {
         }
 
         // 3. 获取需要处理的票务数据
-        LocalDate currentDate = LocalDate.now();
-        List<Ticket> tickets = ticketMapper.findTicketOver(uid, currentDate);
+        List<Ticket> tickets = ticketMapper.findTicketOver(uid);
+
+        System.out.println(tickets);
+
+        if (tickets.isEmpty()) return RV.success("没有需要处理的票务数据");
 
         // 4. 过滤需要自动使用的票
         List<String> validTids = tickets.stream()
                 .filter(this::isExpiredTicket)
                 .map(Ticket::getTid)
                 .collect(Collectors.toList());
+
+        System.out.println(validTids);
 
         // 5. 批量更新状态
         if (!validTids.isEmpty()) {
@@ -213,14 +221,19 @@ public class TicketServiceImpl implements TicketService {
      * @return 是否需要自动使用
      */
     private boolean isExpiredTicket(Ticket ticket) {
+        // 通过sid获取上映的stime
+        String sid = ticket.getSid();
+        Screening screening = screeningMapper.getScreening(sid);
         // 解析场次日期和时间
-        String screeningDay = ticket.getSid();
-        String[] timeRange = screeningDay.split("-");
+        String screeningTime = screening.getStime();
+        String[] timeRange = screeningTime.split("-");
+        LocalDate screeningDay = screening.getSday();
 
         // 转换开始时间
         LocalTime startTime = LocalTime.parse(timeRange[0].trim());
 
-        // 判断逻辑
-        return LocalTime.now().isAfter(startTime);
+        // 判断逻辑，大于当前日期和时间
+        return LocalDate.now().isAfter(screeningDay) ||
+                (LocalDate.now().isEqual(screeningDay) && LocalTime.now().isAfter(startTime));
     }
 }

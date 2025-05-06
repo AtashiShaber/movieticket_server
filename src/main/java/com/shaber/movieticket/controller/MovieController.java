@@ -54,7 +54,7 @@ public class MovieController {
     }
 
     @PostMapping("add")
-    public RV addMovie(@RequestBody MovieDto movieDto) {
+    public RV<String> addMovie(@RequestBody MovieDto movieDto) {
         return movieService.addMovie(movieDto.getMname(),
                 movieDto.getMp(),
                 movieDto.getMactor(),

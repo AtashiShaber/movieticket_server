@@ -13,4 +13,5 @@ public class OrderDto {
     private LocalDateTime otime;
     private BigDecimal oprice;
     private int ostatus;
+    private int tstatus;
 }

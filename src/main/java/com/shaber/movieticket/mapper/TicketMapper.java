@@ -73,5 +73,5 @@ public interface TicketMapper {
                                       @Param("srname") String srname,
                                       @Param("sday") LocalDate sday);
 
-    List<Ticket> findTicketOver(@Param("uid") String uid, @Param("nowDate") LocalDate nowDate);
+    List<Ticket> findTicketOver(@Param("uid") String uid);
 }

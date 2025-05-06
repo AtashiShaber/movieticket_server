@@ -1,10 +1,10 @@
 spring:
   datasource:
-#    url: jdbc:mysql://localhost:3306/cinema?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    url: jdbc:mysql://49.235.28.76:3306/cinema?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/cinema?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+#    url: jdbc:mysql://49.235.28.76:3306/cinema?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
-#    password: 123456
-    password: E43E3AC2EA7C36DC549EC6BAC3877BF2F6F4C40ED8CC8AE31B4177794564E48D
+    password: 123456
+#    password: E43E3AC2EA7C36DC549EC6BAC3877BF2F6F4C40ED8CC8AE31B4177794564E48D
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     #初始化大小
@@ -18,8 +18,8 @@ spring:
   application:
     name: MovieTicketSpringBoot
   redis:
-#    host: localhost
-    host: 49.235.28.76
+    host: localhost
+#    host: 49.235.28.76
     port: 6379
     database: 0
     lettuce:
@@ -27,7 +27,19 @@ spring:
         max-active: 8
         max-idle: 8
         max-wait: 100
-    password: my_strong_password
+#    password: my_strong_password
+#  文件上传大小限制
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# 电影封面上传路径（绝对路径）
+movie:
+  cover:
+    upload:
+#      path: /var/www/html/assets/movies/covers
+      path: D:/Program/WebProgram/Vue/studentspace_browser/src/assets/Movies
 
 mybatis:
   type-aliases-package: com.shaber.movieticket.pojo
@@ -62,3 +74,4 @@ pagehelper:
 jwt:
   secret: 4E0eub2sXUg8Nep0Rszn0OodiQTZ/HVc6JbI4o4BHpCwE4nTGe/HLYyfCmlElUAsYiJQWAmerWljLTwErn6WbA==  # 替换为安全的密钥（建议加密存储）
   expiration: 3600                 # Token 过期时间（秒）
+
