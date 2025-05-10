@@ -33,7 +33,7 @@ public interface UserMapper {
 
     @Update("update `user` set uname = #{uname}," +
             "uphone = #{uphone}," +
-            "umoney = #{umoney}" +
+            "umoney = #{umoney} " +
             "where uid = #{uid}")
     int updateUser(UserDto userDto);
 
